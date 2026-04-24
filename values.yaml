@@ -78,6 +78,7 @@ dnsServer:
   blockListUrls: ""
 
 service:
+  enabled: true
   # Service type for the DNS web console
   web:
     type: ClusterIP
@@ -152,6 +153,8 @@ resources: {}
   #   memory: 256Mi
 
 nodeSelector: {}
+
+hostNetwork: false
 
 tolerations: []
 

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "technitium-dns-server.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "technitium-dns-server.labels" . | nindent 4 }}
 spec:
@@ -22,6 +23,7 @@ spec:
       serviceAccountName: {{ include "technitium-dns-server.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      hostNetwork: {{ .Values.hostNetwork }}
       {{- if .Values.customCA.enabled }}
       initContainers:
       - name: install-ca-cert
@@ -159,6 +161,9 @@ spec:
           mountPath: {{ .Values.pfxCertificate.mountPath }}
           readOnly: true
         {{- end }}
+      {{- with .Values.sidecar }}
+      - {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
       - name: config
       {{- if .Values.persistence.enabled }}
